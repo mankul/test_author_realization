@@ -1,0 +1,8 @@
+
+
+import textract
+
+
+def read():
+    text=textract.process("./s1.pdf")
+    print text

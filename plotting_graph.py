@@ -5,18 +5,28 @@ import os
 
 
 labels={}
-def main():
-    directory_name="/home/mankul/text_reader/"+sys.argv[1]
+#def main():
+
+def plot_and_filter(directory_n):
+    #directory_name="/home/mankul/text_reader/"+sys.argv[1]
+    directory_name= directory_n
+    print directory_n, directory_name
     s=os.listdir(directory_name)
-    escape_chars=[" ","\n","\t","\'","\""]
+    print s
+    escape_chars=[" ","\n","\t","\'","\"","\\","/"]
     auth_dict={}
     all_labels_list=[]
-    for file_name in s:
-        fp=open(directory_name+"/"+file_name,"rb")
+    for filename in s:
+        fp=open(directory_name+"/"+filename,"rb")
+        file_name=filename[:-4].split()[0]
+        print filename,"\n",file_name
         dict_of_words={}
         data=fp.read()
         word=""
         key_r=0
+        key_var=""
+        val_var=""
+    
         for chare in data:
             if chare in escape_chars:
                 continue
@@ -42,8 +52,8 @@ def main():
                 word=""
             else:
                 word=word+chare
-        #
-        print dict_of_words
+        #print file_name
+        #print dict_of_words
         auth_dict[file_name]=dict_of_words
     print "\n\n",auth_dict,"\n\n"
     for f_name in auth_dict.keys():
@@ -63,13 +73,13 @@ def main():
     print labels
     plt.xticks(rotation='vertical')###################try this
     #plt.setp(axes,xticks=labels.values(),xticklabels=labels.keys(),rotation='vertical')###################try this
-    plotting_graph(auth_dict)
-    comparision_plotter(auth_dict)
+    plotting_graph(auth_dict,directory_name+"/")
+    comparision_plotter(auth_dict,directory_name+"/")
 
 
 
     
-def plotting_graph(auth_dict):
+def plotting_graph(auth_dict,directory_name):
     ##########plotting the individual graph for every possible collection of words saturated in the dictionary in the given folder.....
     #####################################    opening a file for writing
     fp=open("author's_database.txt","w")
@@ -105,7 +115,7 @@ def plotting_graph(auth_dict):
             #art_ax.ylabel(lister)
             st=f_name+lister+".png"
             part_ax.set_title(f_name+lister)
-            part_fig.savefig(st)
+            part_fig.savefig(directory_name+st)
             #
             #ull_ax.xticks(x,labels,rotation='vertical')
             #
@@ -117,13 +127,13 @@ def plotting_graph(auth_dict):
             #
             num=(num+1)%5
             #
-        full_fig.savefig("full_img.png")
+        full_fig.savefig(directory_name+"full_img.png")
     #plt.show()
 
 
     
     
-def comparision_plotter(auth_dict):
+def comparision_plotter(auth_dict,directory_name):
     ##########################comparision plotting on the various seperated values
     colors={0:'r',1:'b',3:'g',2:'y',4:'c'}
     markers={0:"^",1:"*",2:"+",3:'*',4:"o"}
@@ -169,7 +179,7 @@ def comparision_plotter(auth_dict):
             part_ax.plot(x,y,"ro",color=colors[num],marker=markers[num], markersize=9, mew =2, linewidth=2)
             num=(num+1)%5
             st=lister+".png"
-            part_fig.savefig(st)
+            part_fig.savefig(directory_name+st)
 
             
-if __name__=="__main__": main()
+#if __name__=="__main__": main()

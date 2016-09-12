@@ -18,7 +18,10 @@ def plot_and_filter(directory_n):
     all_labels_list=[]
     for filename in s:
         fp=open(directory_name+"/"+filename,"rb")
+        print filename
         file_name=filename[:-4].split()[0]
+        if filename[:4].split()[0] != ".txt":
+            continue;
         print filename,"\n",file_name
         dict_of_words={}
         data=fp.read()
@@ -26,7 +29,6 @@ def plot_and_filter(directory_n):
         key_r=0
         key_var=""
         val_var=""
-    
         for chare in data:
             if chare in escape_chars:
                 continue
@@ -46,16 +48,15 @@ def plot_and_filter(directory_n):
             elif chare == ")" :
                 val_var=word
                 word=""
+                print val_var
                 dict_of_words[dict_list][key_var]=val_var
                 key_var=""
             elif chare == "]":
                 word=""
             else:
                 word=word+chare
-        #print file_name
-        #print dict_of_words
         auth_dict[file_name]=dict_of_words
-    print "\n\n",auth_dict,"\n\n"
+        
     for f_name in auth_dict.keys():
         file_name=auth_dict[f_name]
         for lister in file_name.keys():
@@ -64,13 +65,13 @@ def plot_and_filter(directory_n):
             for key in listes.keys():
                 list1.append(key)
             all_labels_list=set().union(all_labels_list,list1)
-    print all_labels_list
+
     k=1
     ##labels as keys are labels and values are integers
     for lab in all_labels_list:
         labels[lab]=k
         k=k+1
-    print labels
+        
     plt.xticks(rotation='vertical')###################try this
     #plt.setp(axes,xticks=labels.values(),xticklabels=labels.keys(),rotation='vertical')###################try this
     plotting_graph(auth_dict,directory_name+"/")
@@ -91,7 +92,7 @@ def plotting_graph(auth_dict,directory_name):
     num=0
     full_fig, full_ax = plt.subplots(figsize=(20,10))
     for f_name in auth_dict.keys():
-        print f_name
+        #print f_name
         file_name=auth_dict[f_name]
         for lister in file_name.keys():
             part_fig,part_ax= plt.subplots(figsize=(20,5))
@@ -141,7 +142,7 @@ def comparision_plotter(auth_dict,directory_name):
     comparision_dict={}
     ##############filtering data from the dictionary made in main function, over various parameters, with every parameter contains various authors data
     for f_name in auth_dict.keys():
-        print f_name
+        #print f_name
         file_name=auth_dict[f_name]
         for lister in file_name.keys():
             listes=file_name[lister]
@@ -172,8 +173,8 @@ def comparision_plotter(auth_dict,directory_name):
                 y.append(float(val))
                 #coord[int(labels[key])]=float(val)
                 #coord=sorted(coord)
-            print x
-            print y
+            #print x
+            #print y
             plt.xticks(rotation = 90)
             plt.setp(part_ax,xticks=labels.values(),xticklabels=labels.keys())#,rotation=45)###################try this
             part_ax.plot(x,y,"ro",color=colors[num],marker=markers[num], markersize=9, mew =2, linewidth=2)

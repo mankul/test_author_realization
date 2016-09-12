@@ -20,25 +20,31 @@ import os
 import plotting_graph
 import filter_sep
 import tokener
+import result_frequency_maximizer
+
 
 def main():
     ############## the directory name is text_of_authors........ uncomment it........
-
+    os.system("rm ./text_data -r")
+    os.system("rm ./data_base_of_authors -r")
+    os.system("rm ./final1 -r")
+    os.system("mkdir ./final1")
     os.system("mkdir ./text_data")
 
     directory_name="./text_of_authors"
     directory_data="./text_data"
     testing_data="./testing_data"
     dir_file=os.listdir(directory_name)
-    
+    final_result1="./final1"
+
     #################################################### data seet created in ./test_data folder, so code commented to reduce processing
     #############                                        uncomment in full running.
 
     for filename in dir_file :
-    #    print filename
         filter_sep.file_for(filename,directory_name,directory_data)
+
     plotting_graph.plot_and_filter(directory_data)
-    #
+    
     testing_file=os.listdir(testing_data)
 
     
@@ -47,8 +53,8 @@ def main():
 
     os.system("mkdir ./testing_data/testfiles")
     testfiles=testing_data + "/" + "testfiles"
+
     for f_name in testing_file:
-    #    print f_name
         testing_method(testing_data, f_name, testfiles , directory_data + "/")
 
     #################################################testing the test data against the code
@@ -56,9 +62,11 @@ def main():
     file_dir= os.listdir(testfiles)
     directory_files=os.listdir(directory_data)
     data_list_of_dict=[]
+
     for files in directory_files:
         data_dict={}
         m=files[-4:].split()[0]
+
         if m == ".txt":
             data_dict=tokener.tokenizer(directory_data + "/" + files,files)
             data_list_of_dict.append(data_dict)
@@ -66,7 +74,9 @@ def main():
     for file_name in file_dir:
         m=file_name[-4:].split()[0]
         if m == ".txt":
-            verifier(file_name,testfiles,data_list_of_dict)###directory_data)
+            r=verifier(file_name,testfiles,data_list_of_dict)###directory_data)
+            print r
+            result_frequency_maximizer.frequency_matcher_and_maximizer(r,file_name)
             
 
     
@@ -78,8 +88,10 @@ def verifier(file_name, test_files,data_list_of_dict):#directory_data):
     test_dict={}
     test_dict=tokener.tokenizer(test_files + "/" + file_name,file_name)
     print file_name,"\n"
-    finding_frequency(test_dict,data_list_of_dict)
     print "\n\n\n\n"
+    dictionar={}
+    dictionar=finding_frequency(test_dict,data_list_of_dict)
+    return dictionar
 
 ####################################################  matching frequency of test data with testing data,, test data ie, test_dict with list of dictinary of testing data, ie data_list_of_dict,,, for each file is calculated...
 
@@ -90,7 +102,8 @@ def finding_frequency(test_dict,data_list_of_dict):
          for clusteres in data_key.keys():
              #print clusteres,"\n",data_key[clusteres],"\n\n\n"
              resulting_matching_frequency[clusteres]=matching_frequency_method(test_dict,data_key[clusteres])
-    print resulting_matching_frequency
+    
+    return resulting_matching_frequency
              
     
 
@@ -127,11 +140,12 @@ def indexing_and_matching_frequency(dict_test,dict_data):
 ##################################################################################
 
 def testing_method(testing_data,file_name, testfiles, testing_dir):
-    #print file_name
-    #print testing_dir
-    cmdstr="mkdir %stestfiles" % (testing_dir)
-    os.system(cmdstr)
-    filter_seperator(file_name,file_name,testing_data,testfiles)
+
+    #cmdstr="mkdir %stestfiles" % (testing_dir)
+    #os.system(cmdstr)
+    if file_name[:-4].split()[0] != ".txt":
+        return
+    filter_sep.filter_seperator(file_name,file_name,testing_data,testfiles)
 
 
 

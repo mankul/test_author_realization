@@ -1,0 +1,17 @@
+
+
+
+def frequency_matcher_and_maximizer(r,file_name):
+   # print r
+    #print file_name
+    new_dict={}
+    for data in r:
+        print data
+        for authors in data:#.keys():
+        print "\n\n\n\nthe data is \t",authora
+            product=1
+            for set_constraints in data[authors].values(): 
+                for words in set_constraints.keys():
+                    product=product* int(set_constraints[words])
+            new_dict[authors]=product
+    print file_name, new_dict
